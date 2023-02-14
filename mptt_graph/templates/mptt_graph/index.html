@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Concept Visualization</title>
+</head>
+<body style="background-color: #c7dee8;">
+	{% load static i18n %}
+
+	<h1 style=" color: rgb(55, 82, 120);font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px; margin: 0;text-align: center;">
+		{% block title %}{% trans "Concept Visualization" %}{% endblock title %}
+	</h1>
+	
+	{% block content %}
+	<h2 style="margin-bottom:1em;color: rgb(86, 129, 189);">{% trans "Current Graph Lists" %}</h2>
+	{% for graph in graphs %}
+		<div style="display:inline;padding:1em;margin:1em;border:1px solid rgb(0, 0, 0);border-radius:5px;background-color: white;">
+			<a style=" text-decoration: none;" href="{% url 'mpttgraph-detail' graph.model_path graph.model_pk %}">
+				{{ graph.title }}
+			</a>
+		</div>
+	{% endfor %}
+
+	<br><br><br><br><br><br><br>
+	<form method="post">
+		{% csrf_token %}
+		<label for="title">New Topic: </label>
+		<input id="title" type="text" name="title">
+		<input type="submit" value="OK">
+	</form>
+	{% endblock content %}
+</body>
+</html>
+
+
+
