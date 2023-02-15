@@ -24,20 +24,31 @@ class ModelListGraphsView(TemplateView):
         return context
     
     def post(self, request,**kwargs):
-        # post method that create new GraphModel object.
-        # Whenever we create a new Graph, we should also initialize a TreeNode object as root
-        # root has the same title as GraphModel
-        title = request.POST.get('title')
-        # print(self.primary_key)
-        new_graph = GraphModel.objects.create(title=title,model_path="mptt_graph.models.TreeNode",model_pk=self.__class__.primary_key)
-        new_graph.save()
-        t =TreeNode.objects.create(title=title,node_id = self.__class__.primary_key)
-        t.save()
-        # print(TreeNode.objects.all())
-        # update primary key
-        self.__class__.primary_key += 1
+        if "new_graph" in request.POST:
+            # post method that create new GraphModel object.
+            # Whenever we create a new Graph, we should also initialize a TreeNode object as root
+            # root has the same title as GraphModel
+            title = request.POST.get('title')
+            # print(self.primary_key)
+            new_graph = GraphModel.objects.create(title=title,model_path="mptt_graph.models.TreeNode",model_pk=self.__class__.primary_key,vote=0)
+            new_graph.save()
+            t =TreeNode.objects.create(title=title,node_id = self.__class__.primary_key)
+            t.save()
+            # print(TreeNode.objects.all())
+            # update primary key
+            self.__class__.primary_key += 1
+            
+        # elif "vote_up_graph" in request.POST:
+        #     num = GraphModel.objects.get(title=request.POST.get('title')).vote
+        #     GraphModel.objects.filter(title=request.POST.get('title')).update(vote=num+1)
+        # elif "vote_down_graph" in request.POST:
+        #     num = GraphModel.objects.get(title=request.POST.get('title')).vote
+        #     GraphModel.objects.filter(title=request.POST.get('title')).update(vote=num-1)
+
         return render(request, self.template_name , {'graphs': GraphModel.objects.all()})
- 
+
+
+    
     class Meta:
         verbose_name = _(u'Mptt graph')
         verbose_name_plural = _(u'Mptt graphs')
@@ -68,11 +79,25 @@ class ModelGraphView(TemplateView):
         return context
     
     def post(self, request, **kwargs):
-        title = request.POST.get('title')
-        parent_title = request.POST.get('parent')
-        parent = TreeNode.objects.get(title=parent_title)
-        new_node = TreeNode.objects.create(title=title,parent=parent)
-        new_node.save()
+        if 'new_node' in request.POST:
+            title = request.POST.get('title')
+            parent_title = request.POST.get('parent')
+            parent = TreeNode.objects.get(title=parent_title)
+            new_node = TreeNode.objects.create(title=title,parent=parent)
+            new_node.save()
+            # update votes in graph
+            graph_id = self.kwargs['pk']
+            graph_votes = GraphModel.objects.get(model_pk=graph_id).vote
+            GraphModel.objects.filter(model_pk=graph_id).update(vote=graph_votes+1)
+
+        elif "vote_up_node" in request.POST:
+            num = TreeNode.objects.get(title=request.POST.get('title')).vote
+            TreeNode.objects.filter(title=request.POST.get('title')).update(vote=num+1)
+
+        elif "vote_down_node" in request.POST:
+            num = TreeNode.objects.get(title=request.POST.get('title')).vote
+            TreeNode.objects.filter(title=request.POST.get('title')).update(vote=num-1)
+
         root_node_pk = self.kwargs['pk']
         root_node = TreeNode.objects.get(node_id=root_node_pk)
         nodes = root_node.get_descendants(include_self=True)

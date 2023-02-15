@@ -2,6 +2,58 @@
 <html>
 <head>
 <title>Concept Visualization</title>
+<style>
+	.new-graph-form {
+		width: 100%;
+		max-width: 600px;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #fff;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
+	}
+	.form-group {
+		margin-bottom: 20px;
+	}
+
+	.form-group label {
+		display: block;
+		font-size: 18px;
+		font-weight: bold;
+		margin-bottom: 5px;
+	}
+
+	.form-group input, .form-group textarea {
+		width: 100%;
+		padding: 10px;
+		border: none;
+		border-radius: 5px;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	}
+
+	.form-group textarea {
+		height: 150px;
+	}
+
+	button[type="submit"] {
+		display: block;
+		margin: 20px auto 0;
+		padding: 10px 20px;
+		background-color: #007bff;
+		color: #fff;
+		border: none;
+		border-radius: 5px;
+		font-size: 18px;
+		font-weight: bold;
+		cursor: pointer;
+	transition: all 0.3s ease;
+		}
+
+	button[type="submit"]:hover {
+		background-color: #0062cc;
+	}
+
+</style>
 </head>
 <body style="background-color: #c7dee8;">
 	{% load static i18n %}
@@ -15,18 +67,29 @@
 	{% for graph in graphs %}
 		<div style="display:inline;padding:1em;margin:1em;border:1px solid rgb(0, 0, 0);border-radius:5px;background-color: white;">
 			<a style=" text-decoration: none;" href="{% url 'mpttgraph-detail' graph.model_path graph.model_pk %}">
-				{{ graph.title }}
+				{{ graph.title }} {{graph.vote}}
 			</a>
 		</div>
+
 	{% endfor %}
 
 	<br><br><br><br><br><br><br>
-	<form method="post">
+
+	<form class="new-graph-form" method="post">
+		{% csrf_token %}
+		<div class="form-group">
+		  <label for="topic-content">New Graph Title: </label>
+		  <textarea id="title" type="text" name="title" placeholder="Enter new grpah title"></textarea>
+		</div>
+		<button type="submit" name="new_graph" value="OK">Submit</button>
+	</form>
+
+	<!-- <form method="post">
 		{% csrf_token %}
 		<label for="title">New Topic: </label>
 		<input id="title" type="text" name="title">
-		<input type="submit" value="OK">
-	</form>
+		<input type="submit" name="new_graph" value="OK">
+	</form> -->
 	{% endblock content %}
 </body>
 </html>

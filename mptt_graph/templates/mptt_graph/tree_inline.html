@@ -2,13 +2,34 @@
 <html>
 <head>
 <title>Concept Visulization inline tree</title>
+<style>
+	.back-button {
+	display: inline-block;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 5px 10px;
+	border-radius: 3px;
+	background-color: #f1f1f1;
+	color: #333;
+	text-decoration: none;
+	transition: all 0.3s ease;
+  	}
+	.back-button:hover {
+		background-color: #333;
+		color: #f1f1f1;
+	}
+
+
+</style>
 
 </head>
 <body>
 	{% load static %}
-
 	{% load mptt_tags %}
+	
 	<link rel="stylesheet" media="screen, projection" href="{% static 'mptt_graph/tree.css' %}" />
+	<a class="back-button" href="index.html">Back</a>
+
 	<div class="text-center">
 		<div class="text-left" style="display:inline-block">
 			<div class="tree">
@@ -16,7 +37,7 @@
 				{% recursetree nodes %}
 					<li>
 						<a href="{% if node.url %}{{ node.url }}{% else %}{{ node.get_absolute_url }}{% endif %}" id="{{ id }}">
-							{{ node.title }}{{ node.name }}
+							{{ node.title }}{{ node.name }} Vote:{{node.vote}}
 							<div id="displayzone_{{ id }}" class="displayzone"></div>
 						</a>
 						<form method="post">
@@ -24,9 +45,23 @@
 							<label for="title">Add New Child: </label>
 							<input id="title" type="text" name="title">
 							<input type="hidden" name="parent" value="{{node}}">
-							<input type="submit" value="OK">
+							<input type="submit" name="new_node" value="OK">
 						</form>
-						{% if not node.is_leaf_node %}
+
+
+						<form style="display:inline-block;" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="vote_type" value="up">
+							<input type="hidden" name="title" value="{{node.title}}">
+							<button type="submit" name="vote_up_node">Up</button>
+						</form>
+						<form style="display:inline-block;" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="vote_type" value="down">
+							<input type="hidden" name="title" value="{{node.title}}">
+							<button type="submit" name="vote_down_node">Down</button>
+						</form>
+										{% if not node.is_leaf_node %}
 							<ul>
 								{{ children }}
 							</ul>

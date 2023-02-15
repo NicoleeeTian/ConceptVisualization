@@ -11,6 +11,7 @@ class GraphModel(models.Model):
                                               "myapp.models.MyModel"))
     model_pk = models.PositiveSmallIntegerField(
         verbose_name=_(u"Root node primary key"))
+    vote = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = _(u'Mptt graph')
@@ -26,6 +27,7 @@ class TreeNode(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name=u'children',
                             verbose_name=_(u'Parent node'), on_delete=models.CASCADE)
     node_id = models.IntegerField(null=True, blank=True)
+    vote = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = _(u'Tree node')
