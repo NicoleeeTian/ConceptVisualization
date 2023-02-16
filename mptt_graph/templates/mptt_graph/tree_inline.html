@@ -19,7 +19,13 @@
 		color: #f1f1f1;
 	}
 
-
+	.ellipse {
+		background: #32557f;
+		width: 200px;
+		height: 100px;
+		border-radius: 50%;
+	}
+   
 </style>
 
 </head>
@@ -30,16 +36,22 @@
 	<link rel="stylesheet" media="screen, projection" href="{% static 'mptt_graph/tree.css' %}" />
 	<a class="back-button" href="index.html">Back</a>
 
+
 	<div class="text-center">
-		<div class="text-left" style="display:inline-block">
+		<div class="text-center" style="display:inline-block">
 			<div class="tree">
 				<ul>
 				{% recursetree nodes %}
 					<li>
-						<a href="{% if node.url %}{{ node.url }}{% else %}{{ node.get_absolute_url }}{% endif %}" id="{{ id }}">
-							{{ node.title }}{{ node.name }} Vote:{{node.vote}}
-							<div id="displayzone_{{ id }}" class="displayzone"></div>
-						</a>
+						<!-- {% if node.type == 'Topic' %} -->
+						<div style="border: 5px solid blue;padding: 5px 10px;text-decoration: none;font-family: arial, verdana, tahoma;font-size: 11px;">
+							<a href="{% if node.url %}{{ node.url }}{% else %}{{ node.get_absolute_url }}{% endif %}" id="{{ id }}">
+								{{ node.title }}{{ node.name }} Vote:{{node.vote}}
+								<div id="displayzone_{{ id }}" class="displayzone"></div>
+							</a> 
+						</div>
+							
+						<!-- {% endif %} -->
 						<form method="post">
 							{% csrf_token %}
 							<label for="title">Add New Child: </label>
@@ -47,8 +59,6 @@
 							<input type="hidden" name="parent" value="{{node}}">
 							<input type="submit" name="new_node" value="OK">
 						</form>
-
-
 						<form style="display:inline-block;" method="post">
 							{% csrf_token %}
 							<input type="hidden" name="vote_type" value="up">
@@ -61,10 +71,10 @@
 							<input type="hidden" name="title" value="{{node.title}}">
 							<button type="submit" name="vote_down_node">Down</button>
 						</form>
-										{% if not node.is_leaf_node %}
-							<ul>
-								{{ children }}
-							</ul>
+						{% if not node.is_leaf_node %}
+						<ul>
+							{{ children }}
+						</ul>
 						{% endif %}
 					</li>
 				{% endrecursetree %}

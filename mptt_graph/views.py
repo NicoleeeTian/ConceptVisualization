@@ -21,6 +21,7 @@ class ModelListGraphsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ModelListGraphsView, self).get_context_data(**kwargs)
         context['graphs'] = GraphModel.objects.all()
+
         return context
     
     def post(self, request,**kwargs):
@@ -76,6 +77,7 @@ class ModelGraphView(TemplateView):
         root_node = model.objects.get(node_id=root_node_pk)
         nodes = root_node.get_descendants(include_self=True)
         context['nodes'] = nodes
+        print("hhh")
         return context
     
     def post(self, request, **kwargs):

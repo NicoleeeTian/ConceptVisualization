@@ -23,11 +23,19 @@ class GraphModel(models.Model):
 
 
 class TreeNode(MPTTModel):
+    type_choices = [
+        ('Topic', 'Topic'),
+        ('Example', 'Example'),
+        ('Attribute', 'Attribute'),
+        ('Reason', 'Reason'),
+        ('Theory', 'Theory'),
+    ]
     title = models.CharField(max_length=200, verbose_name=_(u"Title"))
     parent = TreeForeignKey('self', null=True, blank=True, related_name=u'children',
                             verbose_name=_(u'Parent node'), on_delete=models.CASCADE)
     node_id = models.IntegerField(null=True, blank=True)
     vote = models.IntegerField(default=0)
+    type = models.CharField(max_length=20,choices=type_choices,default='Topic')
 
     class Meta:
         verbose_name = _(u'Tree node')
