@@ -7,6 +7,8 @@ from mptt_graph.utils import get_model_from_path
 from django.shortcuts import render
 
 
+
+
 class ModelListGraphsView(TemplateView):
     # high level there is a list of graphs 
     template_name = 'mptt_graph/index.html'
@@ -84,8 +86,10 @@ class ModelGraphView(TemplateView):
         if 'new_node' in request.POST:
             title = request.POST.get('title')
             parent_title = request.POST.get('parent')
+            type = request.POST.get('type')
+            print(type)
             parent = TreeNode.objects.get(title=parent_title)
-            new_node = TreeNode.objects.create(title=title,parent=parent)
+            new_node = TreeNode.objects.create(title=title,parent=parent,type=type)
             new_node.save()
             # update votes in graph
             graph_id = self.kwargs['pk']
@@ -104,6 +108,10 @@ class ModelGraphView(TemplateView):
         root_node = TreeNode.objects.get(node_id=root_node_pk)
         nodes = root_node.get_descendants(include_self=True)
         return render(request, self.template_name , {'nodes': nodes})
+
+    def popup(request):
+        print('here!')
+        return render(request, 'popup.html')
 
 
 class ModelGraphInlineView(ModelGraphView):
