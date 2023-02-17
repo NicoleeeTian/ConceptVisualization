@@ -7,6 +7,6 @@
   -  Whenever the user create a new graph, the first node name is the same as the graph title, which has the type of Title.
 
 ☺️In the **graph page**, users could visualize the concept relations. 
-  -  Each node has a boarder color that represents the type of this node: Title, Attribute, Example, Reason, and Theory.
-  -  By clicking the +, users are able to see the detail of each node. They can either vote up or vote down to show their agreement or disagreement.
+  -  Each node has a boarder color that represents the type of this node: ``Title``, ``Attribute``, ``Example``, ``Reason``, and ``Theory``.
+  -  By clicking the ``+``, users are able to see the detail of each node. They can either vote up or vote down to show their agreement or disagreement.
   -  Moreover, the web has the functionality of adding a new node of this current node.
