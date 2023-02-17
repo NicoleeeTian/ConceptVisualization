@@ -131,16 +131,39 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		background-color: #cfeced;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+		border: 3px solid #113852;
 		padding: 20px;
-		border: 1px solid black;
-		background-color: rgb(212, 251, 250);
+		z-index: 9999;
 	}
+
+	.popup.show {
+		display: block;
+	}
+	/* #popup-content {
+  		height: 50px;
+
+		overflow-y: scroll;
+	} */
+
+
+
 </style>
+
+<script>
+	function openPopup(title) {
+		document.getElementById("myPopup-"+title).style.display = "block";
+	}
+	function closePopup(title) {
+		document.getElementById("myPopup-"+title).style.display = "none";
+	}
+</script>
 
 
 
 </head>
-<body>
+<body style="background-color: whitesmoke;">
 	{% load static %}
 	{% load mptt_tags %}
 	
@@ -165,35 +188,36 @@
 						{% elif node.type == 'Theory' %}
 							<a style="border: 5px solid rgb(98, 185, 120);" href="{% if node.url %}{{ node.url }}{% else %}{{ node.get_absolute_url }}{% endif %}" id="{{ id }}">
 						{% endif %}
-							{{ node.title }}{{ node.name }}
-								<div id="displayzone_{{ id }}" class="displayzone"></div>
-							</a>
-							<script>
-								function openPopup() {
-									document.getElementById("myPopup").style.display = "block";
-								}
-								function closePopup() {
-									document.getElementById("myPopup").style.display = "none";
-								}
-							</script>
-
-							<div id="myDiv" onclick="openPopup()">+</div>
-
-							<div id="myPopup" class="popup">
-								<h3>Detail information of {{node.title}}</h3>
-								Current Vote:{{node.vote}}
-								<form style="display:inline-block;" method="post">
-									{% csrf_token %}
-									<input type="hidden" name="vote_type" value="up">
+						{{ node.title }}{{ node.name }}
+						<div id="displayzone_{{ id }}" class="displayzone"></div>
+						</a>
+						<button id="myDiv" onclick="openPopup('{{node.title}}')"> + </button>
+				
+						<div id="myPopup-{{node.title}}" class="popup">
+							<!-- <div id="popup-content"> -->
+								<div>
+									<strong>Name: </strong>{{node.title}}  <strong>Type: </strong>{{node.type}} 
+									<strong>Current Vote: </strong> {{node.vote}} 
+									<form style="display:inline-block;" method="post">
+										{% csrf_token %}
+										<input type="hidden" name="vote_type" value="up">
+										<input type="hidden" name="title" value="{{node.title}}">
+										<button type="submit" name="vote_up_node">Up</button>
+									</form>
+									<form style="display:inline-block;" method="post">
+										{% csrf_token %}
+										<input type="hidden" name="vote_type" value="down">
+										<input type="hidden" name="title" value="{{node.title}}">
+										<button type="submit" name="vote_down_node">Down</button>
+									</form>
+								</div>
+								<br>
+								<form method="post">
 									<input type="hidden" name="title" value="{{node.title}}">
-									<button type="submit" name="vote_up_node">Up</button>
-								</form>
-								<form style="display:inline-block;" method="post">
-									{% csrf_token %}
-									<input type="hidden" name="vote_type" value="down">
-									<input type="hidden" name="title" value="{{node.title}}">
-									<button type="submit" name="vote_down_node">Down</button>
-								</form>
+									<input type="submit" name="delete_node" value="Delete">
+								</fornm>
+								<br>
+								<!-- new child form -->
 								<form method="post">
 									{% csrf_token %}
 									<label for="title">Add New Child of {{node.title}}: </label>
@@ -209,8 +233,10 @@
 									<input type="hidden" name="parent" value="{{node}}">
 									<input type="submit" name="new_node" value="OK">
 								</form>
-								<button onclick="closePopup()">Close</button>
-							</div>
+								<br>
+								<button onclick="closePopup('{{node.title}}')">Close</button>
+							<!-- </div> -->
+						</div>
 
 						{% if not node.is_leaf_node %}
 						<ul>

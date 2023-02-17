@@ -87,7 +87,7 @@ class ModelGraphView(TemplateView):
             title = request.POST.get('title')
             parent_title = request.POST.get('parent')
             type = request.POST.get('type')
-            print(type)
+            print(title)
             parent = TreeNode.objects.get(title=parent_title)
             new_node = TreeNode.objects.create(title=title,parent=parent,type=type)
             new_node.save()
@@ -95,6 +95,10 @@ class ModelGraphView(TemplateView):
             graph_id = self.kwargs['pk']
             graph_votes = GraphModel.objects.get(model_pk=graph_id).vote
             GraphModel.objects.filter(model_pk=graph_id).update(vote=graph_votes+1)
+
+        elif "delete_node" in request.POST:
+            print("why")
+            TreeNode.objects.get(title=request.POST.get('title')).delete()
 
         elif "vote_up_node" in request.POST:
             num = TreeNode.objects.get(title=request.POST.get('title')).vote
