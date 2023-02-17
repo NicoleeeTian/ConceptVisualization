@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.urls import re_path,path
 from . import views
 from mptt_graph.views import ModelListGraphsView, ModelGraphView, ModelGraphInlineView

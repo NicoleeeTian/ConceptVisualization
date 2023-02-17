@@ -101,7 +101,7 @@
 		text-decoration: none;
 		color: #666;
 		font-family: arial, verdana, tahoma;
-		font-size: 20px;
+		font-size: 10px;
 		display: inline-block;
 		
 		border-radius: 5px;
@@ -127,27 +127,21 @@
 	}
 	.popup {
 		display: none;
-		position: fixed;
+		position:fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		background-color: #cfeced;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-		border: 3px solid #113852;
+		border: 3px solid #222758;
+		border-style: ridge;
 		padding: 20px;
-		z-index: 9999;
+		z-index: 999;
 	}
 
 	.popup.show {
 		display: block;
 	}
-	/* #popup-content {
-  		height: 50px;
-
-		overflow-y: scroll;
-	} */
-
-
 
 </style>
 
@@ -170,9 +164,19 @@
 	<link rel="stylesheet" media="screen, projection" href="{% static 'mptt_graph/tree.css' %}" />
 	<a class="back-button" href="index.html">Back</a>
 
-
 	<div class="text-center">
 		<div class="text-center" style="display:inline-block">
+			{% if messages %}
+				{% for message in messages %}
+				<script>
+				function showError() {
+					var errorMessage = "{{ message|escapejs }}";
+					alert(errorMessage);
+				}
+				showError();
+				</script>
+				{% endfor %}
+			{% endif %}
 			<div class="tree">
 				<ul>
 				{% recursetree nodes %}
@@ -194,7 +198,7 @@
 						<button id="myDiv" onclick="openPopup('{{node.title}}')"> + </button>
 				
 						<div id="myPopup-{{node.title}}" class="popup">
-							<!-- <div id="popup-content"> -->
+							<!-- <div class="popup-content"> -->
 								<div>
 									<strong>Name: </strong>{{node.title}}  <strong>Type: </strong>{{node.type}} 
 									<strong>Current Vote: </strong> {{node.vote}} 
@@ -213,10 +217,13 @@
 								</div>
 								<br>
 								<form method="post">
+									{% csrf_token %}
 									<input type="hidden" name="title" value="{{node.title}}">
 									<input type="submit" name="delete_node" value="Delete">
-								</fornm>
+								</form>
+
 								<br>
+								
 								<!-- new child form -->
 								<form method="post">
 									{% csrf_token %}
@@ -231,7 +238,7 @@
 										<option value="Theory">Theory</option>
 									</select>
 									<input type="hidden" name="parent" value="{{node}}">
-									<input type="submit" name="new_node" value="OK">
+									<input onclick="showError()" type="submit" name="new_node" value="OK">
 								</form>
 								<br>
 								<button onclick="closePopup('{{node.title}}')">Close</button>

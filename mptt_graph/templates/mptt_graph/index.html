@@ -12,6 +12,7 @@
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		border-radius: 5px;
 	}
+	
 	.form-group {
 		margin-bottom: 20px;
 	}
@@ -81,15 +82,21 @@
 		  <label for="topic-content">New Graph Title: </label>
 		  <textarea id="title" type="text" name="title" placeholder="Enter new grpah title"></textarea>
 		</div>
-		<button type="submit" name="new_graph" value="OK">Submit</button>
+		<button onclick="showError()" type="submit" name="new_graph" value="OK">Submit</button>
 	</form>
 
-	<!-- <form method="post">
-		{% csrf_token %}
-		<label for="title">New Topic: </label>
-		<input id="title" type="text" name="title">
-		<input type="submit" name="new_graph" value="OK">
-	</form> -->
+	{% if messages %}
+  	{% for message in messages %}
+    <script>
+      function showError() {
+        var errorMessage = "{{ message|escapejs }}";
+        alert(errorMessage);
+      }
+      showError();
+    </script>
+  	{% endfor %}
+	{% endif %}
+
 	{% endblock content %}
 </body>
 </html>
