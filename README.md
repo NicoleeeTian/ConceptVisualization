@@ -2,11 +2,19 @@
 
 ⌛This a project that build a Django-based web app that supports building relations among concepts.
 
-☺️In the **main page**, users could add multiple concept graphs. By clicking them, users can go into each concept graph for visualizations. 
-  -  There is always a number that go with the graph title, which is how many nodes the graph has right now.
-  -  Whenever the user create a new graph, the first node name is the same as the graph title, which has the type of Title.
+☺️On the **main page**, users can add multiple concept graphs. By clicking on them, users can navigate to each concept graph for visualization.
+  -  The graph title is accompanied by a number that represents the number of nodes in the graph.
+  -  Whenever a user creates a new graph, the first node name is the same as the graph title and has the type of ``Title``.
 
-☺️In the **graph page**, users could visualize the concept relations. 
-  -  Each node has a boarder color that represents the type of this node: ``Title``, ``Attribute``, ``Example``, ``Reason``, and ``Theory``.
-  -  By clicking the ``+``, users are able to see the detail of each node. They can either vote up or vote down to show their agreement or disagreement.
-  -  Moreover, the web has the functionality of adding a new node of this current node.
+☺️On the **graph page**, users can visualize the concept relations. 
+  -  Each node has a border color that represents its type: ``Title``, ``Attribute``, ``Example``, ``Reason``, or ``Theory``.
+  -  By clicking the ``+``, users can see the details of each node. They can also vote up or down to express their agreement or disagreement.
+  -  Furthermore, users can add a new node to the current node.
+  -  Users can also delete the current node. If this current node has any child, the child will also be deleted.
+ 
+☺️ Error Handling
+  - Users cannot create graph/node that is already existed or with empty title.
+
+☺️ Upcoming functionalities
+  -  Comments for each nodes.
+  -  Real-time chatbox using channels provided by Django.
