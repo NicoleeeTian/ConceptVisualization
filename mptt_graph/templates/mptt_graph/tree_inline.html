@@ -1,168 +1,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Concept Visulization inline tree</title>
-<style>
-	.back-button {
-	display: inline-block;
-	font-size: 18px;
-	font-weight: bold;
-	padding: 5px 10px;
-	border-radius: 3px;
-	background-color: #f1f1f1;
-	color: #333;
-	text-decoration: none;
-	transition: all 0.3s ease;
-  	}
-	.back-button:hover {
-		background-color: #333;
-		color: #f1f1f1;
-	}
-
-	.ellipse {
-		background: #32557f;
-		width: 200px;
-		height: 100px;
-		border-radius: 50%;
-	}
-
-	* {margin: 0; padding: 0;}
-
-	.tree ul {
-		padding-top: 20px; position: relative;
+	<title>Concept Visulization inline tree</title>
+	<style>
+		body {
+			background-color: whitesmoke;
+		}
 		
-		transition: all 0.5s;
-		-webkit-transition: all 0.5s;
-		-moz-transition: all 0.5s;
-	}
+		.back-button {
+			display: inline-block;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 5px 10px;
+			border-radius: 3px;
+			background-color: #f1f1f1;
+			color: #333;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+		.back-button:hover {
+			background-color: #333;
+			color: #f1f1f1;
+		}
 
-	.tree li {
-		float: left; text-align: center;
-		list-style-type: none;
-		position: relative;
-		padding: 20px 5px 0 5px;
-		
-		transition: all 0.5s;
-		-webkit-transition: all 0.5s;
-		-moz-transition: all 0.5s;
-	}
+		.ellipse {
+			background: #32557f;
+			width: 200px;
+			height: 100px;
+			border-radius: 50%;
+		}
 
-	/*We will use ::before and ::after to draw the connectors*/
+		* {margin: 0; padding: 0;}
 
-	.tree li::before, .tree li::after{
-		content: '';
-		position: absolute; top: 0; right: 50%;
-		border-top: 1px solid #ccc;
-		width: 50%; height: 20px;
-	}
-	.tree li::after{
-		right: auto; left: 50%;
-		border-left: 1px solid #ccc;
-	}
+		.tree ul {
+			padding-top: 20px; position: relative;
+			
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
 
-	/*We need to remove left-right connectors from elements without 
-	any siblings*/
-	.tree li:only-child::after, .tree li:only-child::before {
-		display: none;
-	}
+		.tree li {
+			float: left; text-align: center;
+			list-style-type: none;
+			position: relative;
+			padding: 20px 5px 0 5px;
+			
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
 
-	/*Remove space from the top of single children*/
-	.tree li:only-child{ padding-top: 0;}
+		/*We will use ::before and ::after to draw the connectors*/
 
-	/*Remove left connector from first child and 
-	right connector from last child*/
-	.tree li:first-child::before, .tree li:last-child::after{
-		border: 0 none;
-	}
-	/*Adding back the vertical connector to the last nodes*/
-	.tree li:last-child::before{
-		border-right: 1px solid #ccc;
-		border-radius: 0 5px 0 0;
-		-webkit-border-radius: 0 5px 0 0;
-		-moz-border-radius: 0 5px 0 0;
-	}
-	.tree li:first-child::after{
-		border-radius: 5px 0 0 0;
-		-webkit-border-radius: 5px 0 0 0;
-		-moz-border-radius: 5px 0 0 0;
-	}
+		.tree li::before, .tree li::after{
+			content: '';
+			position: absolute; top: 0; right: 50%;
+			border-top: 1px solid #ccc;
+			width: 50%; height: 20px;
+		}
+		.tree li::after{
+			right: auto; left: 50%;
+			border-left: 1px solid #ccc;
+		}
 
-	/*Time to add downward connectors from parents*/
-	.tree ul ul::before{
-		content: '';
-		position: absolute; top: 0; left: 50%;
-		border-left: 1px solid #ccc;
-		width: 0; height: 20px;
-	}
+		/*We need to remove left-right connectors from elements without 
+		any siblings*/
 
-	.tree li a{
-		border: 5px solid blue;
-		padding: 5px 10px;
-		text-decoration: none;
-		color: #666;
-		font-family: arial, verdana, tahoma;
-		font-size: 10px;
-		display: inline-block;
-		
-		border-radius: 5px;
-		-webkit-border-radius: 50px;
-		-moz-border-radius: 5px;
-		
-		transition: all 0.5s;
-		-webkit-transition: all 0.5s;
-		-moz-transition: all 0.5s;
-	}
+		.tree li:only-child::after, .tree li:only-child::before {
+			display: none;
+		}
 
-	/*Time for some hover effects*/
-	/*We will apply the hover effect the the lineage of the element also*/
-	.tree li a:hover, .tree li a:hover+ul li a {
-		background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
-	}
-	/*Connector styles on hover*/
-	.tree li a:hover+ul li::after, 
-	.tree li a:hover+ul li::before, 
-	.tree li a:hover+ul::before, 
-	.tree li a:hover+ul ul::before{
-		border-color:  #0f316c;
-	}
-	.popup {
-		display: none;
-		position:fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background-color: #cfeced;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-		border: 3px solid #222758;
-		border-style: ridge;
-		padding: 20px;
-		z-index: 999;
-	}
+		/*Remove space from the top of single children*/
+		.tree li:only-child{ padding-top: 0;}
 
-	.popup.show {
-		display: block;
-	}
+		/*Remove left connector from first child and 
+		right connector from last child*/
+		.tree li:first-child::before, .tree li:last-child::after{
+			border: 0 none;
+		}
+		/*Adding back the vertical connector to the last nodes*/
+		.tree li:last-child::before{
+			border-right: 1px solid #ccc;
+			border-radius: 0 5px 0 0;
+			-webkit-border-radius: 0 5px 0 0;
+			-moz-border-radius: 0 5px 0 0;
+		}
 
-</style>
+		.tree li:first-child::after{
+			border-radius: 5px 0 0 0;
+			-webkit-border-radius: 5px 0 0 0;
+			-moz-border-radius: 5px 0 0 0;
+		}
 
-<script>
-	function openPopup(title) {
-		document.getElementById("myPopup-"+title).style.display = "block";
-	}
-	function closePopup(title) {
-		document.getElementById("myPopup-"+title).style.display = "none";
-	}
-</script>
+		/*Time to add downward connectors from parents*/
+		.tree ul ul::before{
+			content: '';
+			position: absolute; top: 0; left: 50%;
+			border-left: 1px solid #ccc;
+			width: 0; height: 20px;
+		}
 
+		.tree li a{
+			border: 5px solid blue;
+			padding: 5px 10px;
+			text-decoration: none;
+			color: #666;
+			font-family: arial, verdana, tahoma;
+			font-size: 12px;
+			display: inline-block;
+			
+			border-radius: 5px;
+			-webkit-border-radius: 50px;
+			-moz-border-radius: 5px;
+			
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
 
+		/*Time for some hover effects*/
+		/*We will apply the hover effect the the lineage of the element also*/
+		.tree li a:hover, .tree li a:hover+ul li a {
+			background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+		}
+		/*Connector styles on hover*/
+		.tree li a:hover+ul li::after, 
+		.tree li a:hover+ul li::before, 
+		.tree li a:hover+ul::before, 
+		.tree li a:hover+ul ul::before{
+			border-color:  #0f316c;
+		}
 
+		.popup {
+			display: none;
+			position:fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: #cfeced;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+			border: 3px solid #222758;
+			border-style: ridge;
+			padding: 20px;
+			z-index: 999;
+		}
+
+		.popup.show {
+			display: block;
+		}
+	</style>
+
+	<script>
+		function openPopup(title) {
+			document.getElementById("myPopup-"+title).style.display = "block";
+		}
+		function closePopup(title) {
+			document.getElementById("myPopup-"+title).style.display = "none";
+		}
+	</script>
 </head>
-<body style="background-color: whitesmoke;">
-	{% load static %}
+
+<body>
 	{% load mptt_tags %}
 	
-	<link rel="stylesheet" media="screen, projection" href="{% static 'mptt_graph/tree.css' %}" />
-	<a class="back-button" href="index.html">Back</a>
+
+	<a class="back-button" href="{% url 'mpttgraph-index' %}">Back</a>
 
 	<div class="text-center">
 		<div class="text-center" style="display:inline-block">

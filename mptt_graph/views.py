@@ -3,7 +3,6 @@ from django.views.generic import TemplateView
 from mptt_graph.models import GraphModel, TreeNode
 from django.utils.translation import gettext as _
 from django.contrib import messages
-from mptt_graph.utils import get_model_from_path
 from django.shortcuts import render
 
 
@@ -49,9 +48,10 @@ class ModelListGraphsView(TemplateView):
     def __str__(self):
         return self.title
 
+    
 class ModelGraphView(TemplateView):
     # low level for each graph
-    template_name = 'mptt_graph/tree.html'
+    template_name = 'mptt_graph/tree_inline.html'
     
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_staff:
@@ -60,7 +60,7 @@ class ModelGraphView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super(ModelGraphView, self).get_context_data(**kwargs)
-        model = get_model_from_path(self.kwargs['modpath'])
+        # model = get_model_from_path(self.kwargs['modpath'])
         root_node_pk = self.kwargs['pk']
         root_node = TreeNode.objects.get(node_id=root_node_pk)
         nodes = root_node.get_descendants(include_self=True)
@@ -103,7 +103,6 @@ class ModelGraphView(TemplateView):
         root_node = TreeNode.objects.get(node_id=root_node_pk)
         nodes = root_node.get_descendants(include_self=True)
         return render(request, self.template_name , {'nodes': nodes})
-
 
 class ModelGraphInlineView(ModelGraphView):
     template_name = 'mptt_graph/tree_inline.html'
